@@ -1,4 +1,4 @@
-PImage bg, cabbage, groundhogIdle, life, soldier, soil;
+PImage bg, cabbage, groundhogIdle, groundhogDown, groundhogLeft, groundhogRight, life, soldier, soil;
 PImage restartHovered, restartNormal, startHovered, startNormal;
 PImage title, gameover;
 
@@ -12,18 +12,21 @@ int soldierX, soldierY;
 int groundhogX, groundhogY;
 int distanceX, distanceY;
 int lifeX = 10;
+int moveSpeed = 5;
 
-boolean downPressed, rightPressed, leftPressed;
+boolean downPressed = false;
+boolean leftPressed = false;
+boolean rightPressed = false;
+boolean groundhogAppear = true;
 
 void setup() {
-	size(640, 480, P2D);
+  size(640, 480, P2D);
   //load images
   bg = loadImage("img/bg.jpg");
   life = loadImage("img/life.png");
   soil = loadImage("img/soil.png");
   soldier = loadImage("img/soldier.png");
   cabbage = loadImage("img/cabbage.png");
-  groundhogIdle = loadImage("img/groundhogIdle.png");
   
   title = loadImage("img/title.jpg");
   gameover = loadImage("img/gameover.jpg");
@@ -33,6 +36,7 @@ void setup() {
   restartNormal = loadImage("img/restartNormal.png");
   restartHovered= loadImage("img/restartHovered.png");
   
+  groundhogIdle = loadImage("img/groundhogIdle.png");
   groundhogDown = loadImage("img/groundhogDown.png");
   groundhogLeft = loadImage("img/groundhogLeft.png");
   groundhogRight = loadImage("img/groundhogRight.png");
@@ -50,9 +54,9 @@ void setup() {
 }
 
 void draw() {
-	// Switch Game State
+  // Switch Game State
   switch(gameState){
-		case GAME_START:
+    case GAME_START:
       background(title);
       image(startNormal, 248, 360, 144, 60); 
       if(mouseX>=248 && mouseX<=392 && mouseY>=360 && mouseY<=420){
@@ -62,7 +66,7 @@ void draw() {
         }
       }
     break;
-		case GAME_RUN:
+    case GAME_RUN:
       background(bg);
       image (soil, 0, 160);
 
@@ -87,7 +91,7 @@ void draw() {
   
       if (groundhogAppear) {
       image(groundhogIdle, groundhogX, groundhogY);
-   　 }
+    }
 
       image (cabbage, cabbageX, cabbageY);
       if(groundhogX==cabbageX && groundhogY==cabbageY){
@@ -109,7 +113,6 @@ void draw() {
       image(groundhogDown, groundhogX, groundhogY);
       groundhogY+=moveSpeed;
       if (groundhogY>=distanceY)distanceY=distanceY+80;
-      if (groundhogY+80>height)groundhogY=height-80;
     }
 
     if (leftPressed) {
@@ -117,7 +120,6 @@ void draw() {
       image(groundhogLeft, groundhogX, groundhogY);
       groundhogX-=moveSpeed;
       if (groundhogX<=distanceX)distanceX=distanceX-80;
-      if (groundhogX<0)groundhogX=0;
     }
 
     if (rightPressed) {
@@ -125,9 +127,8 @@ void draw() {
       image(groundhogRight, groundhogX, groundhogY);
       groundhogX+=moveSpeed;
       if (groundhogX>=distanceX)distanceX=distanceX+80;
-      if (groundhogX+80>width)groundhogX=width-80;
     }
-    
+    if (groundhogY+80>height)groundhogY=height-80;
     if (groundhogX+80>width)groundhogX=width-80;
     if (groundhogX<0)groundhogX=0;
     
@@ -153,19 +154,18 @@ void draw() {
 }
 
 void keyPressed(){
-  switch(keyCode){
+  if (key == CODED) { // det[ect special keys       
+    switch (keyCode) {
     case DOWN:
-    groundhogY += 80;
-    if (groundhogY>=400)groundhogY = 400;
-    break;
-    case RIGHT:
-    groundhogX += 80;
-    if (groundhogX>=560)groundhogX = 560;
-    break;
+      if(!leftPressed && !rightPressed)downPressed = true;
+      break;
     case LEFT:
-    groundhogX -= 80;
-    if (groundhogX<=0)groundhogX = 0;
-    break;
+      if(!downPressed && !rightPressed)leftPressed = true;
+      break;
+    case RIGHT:
+      if(!downPressed && !leftPressed)rightPressed = true;
+      break;
+    }
   }
 }
 
@@ -174,17 +174,18 @@ void keyReleased() {
     switch (keyCode) {
     case DOWN:
       downPressed = false;
-      groundhogAppear = true;
+      if(!leftPressed && !rightPressed)groundhogAppear = true;
+      groundhogY=distanceY;
       break;
     case LEFT:
       leftPressed = false;
-      groundhogAppear = true;
+      if(!downPressed && !rightPressed)groundhogAppear = true;
       groundhogX=distanceX;
       break;
     case RIGHT:
       rightPressed = false;
       groundhogX=distanceX;
-      groundhogAppear = true;
+      if(!downPressed && !leftPressed)groundhogAppear = true;
       break;
     }
   }
