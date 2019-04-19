@@ -33,9 +33,9 @@ void setup() {
   restartNormal = loadImage("img/restartNormal.png");
   restartHovered= loadImage("img/restartHovered.png");
   
-/*groundhogDown = loadImage("img/groundhogDown.png");
+  groundhogDown = loadImage("img/groundhogDown.png");
   groundhogLeft = loadImage("img/groundhogLeft.png");
-  groundhogRight = loadImage("img/groundhogRight.png");*/
+  groundhogRight = loadImage("img/groundhogRight.png");
   
   cabbageX = floor(random(8))*80;
   cabbageY = floor(random(4))*80+160;
