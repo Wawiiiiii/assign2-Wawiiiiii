@@ -43,6 +43,9 @@ void setup() {
   groundhogX = 320;
   groundhogY = 80;
   lifeX = 10;
+  
+  distanceX = groundhogX;
+  distanceY = groundhogY;
 }
 
 void draw() {
@@ -81,22 +84,52 @@ void draw() {
       image (life, lifeX, 10);
       image (life, lifeX+70, 10);
   
-  
-      image (groundhogIdle, groundhogX, groundhogY);
+      if (groundhogAppear) {
+      image(groundhogIdle, groundhogX, groundhogY);
+   　 }
+
       image (cabbage, cabbageX, cabbageY);
-      image (soldier, soldierX-80, soldierY);
- 
       if(groundhogX==cabbageX && groundhogY==cabbageY){
         cabbageX = -80;
         lifeX = lifeX+70;
       }
+      
+      image (soldier, soldierX-80, soldierY);
       if(groundhogX<soldierX-80+80 && groundhogX+80>soldierX-80 && groundhogY+80>soldierY && groundhogY<soldierY+80){
         groundhogY = 80;
         lifeX = lifeX-70;
         if(lifeX == -130){
         gameState = GAME_OVER;
         }
-      }      
+      } 
+    //Pressed
+    if (downPressed) {
+      groundhogAppear = false;
+      image(groundhogDown, groundhogX, groundhogY);
+      groundhogY+=moveSpeed;
+      if (groundhogY>=distanceY)distanceY=distanceY+80;
+      if (groundhogY+80>height)groundhogY=height-80;
+    }
+
+    if (leftPressed) {
+      groundhogAppear = false;
+      image(groundhogLeft, groundhogX, groundhogY);
+      groundhogX-=moveSpeed;
+      if (groundhogX<=distanceX)distanceX=distanceX-80;
+      if (groundhogX<0)groundhogX=0;
+    }
+
+    if (rightPressed) {
+      groundhogAppear = false;
+      image(groundhogRight, groundhogX, groundhogY);
+      groundhogX+=moveSpeed;
+      if (groundhogX>=distanceX)distanceX=distanceX+80;
+      if (groundhogX+80>width)groundhogX=width-80;
+    }
+    
+    if (groundhogX+80>width)groundhogX=width-80;
+    if (groundhogX<0)groundhogX=0;
+    
     break;
     case GAME_OVER:
       background(gameover);
@@ -135,8 +168,23 @@ void keyPressed(){
   }
 }
 
-void keyReleased(){
-  switch(keyCode){
-  
+void keyReleased() {
+  if (key == CODED) {
+    switch (keyCode) {
+    case DOWN:
+      downPressed = false;
+      groundhogAppear = true;
+      break;
+    case LEFT:
+      leftPressed = false;
+      groundhogAppear = true;
+      groundhogX=distanceX;
+      break;
+    case RIGHT:
+      rightPressed = false;
+      groundhogX=distanceX;
+      groundhogAppear = true;
+      break;
+    }
   }
 }
