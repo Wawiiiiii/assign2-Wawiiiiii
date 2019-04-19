@@ -10,6 +10,7 @@ int gameState = GAME_START;
 int cabbageX, cabbageY;
 int soldierX, soldierY;
 int groundhogX, groundhogY;
+int distanceX, distanceY;
 int lifeX = 10;
 
 boolean downPressed, rightPressed, leftPressed;
